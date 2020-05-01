@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-const { uuid, isUuid } = require('uuidv4');
+const { uuid } = require('uuidv4');
 
 const app = express();
 
@@ -34,6 +34,7 @@ app.put('/repositories/:id', (request, response) => {
   const { id } = request.params;
   const { title, url, techs } = request.body;
 
+  const repoLikes = repositories.find((repo) => repo.id === id);
   const repoIndex = repositories.findIndex((repo) => repo.id === id);
 
   if (repoIndex < 0) {
@@ -41,9 +42,11 @@ app.put('/repositories/:id', (request, response) => {
   }
 
   const repo = {
+    id,
     title,
     url,
     techs,
+    likes: repoLikes.likes,
   };
 
   repositories[repoIndex] = repo;
