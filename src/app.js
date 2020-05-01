@@ -15,9 +15,9 @@ app.get('/repositories', (request, response) => {
 });
 
 app.post('/repositories', (request, response) => {
-  const { title, url, techs, likes } = request.body;
+  const { title, url, techs } = request.body;
 
-  const project = {
+  const repo = {
     id: uuid(),
     title,
     url,
@@ -25,21 +25,62 @@ app.post('/repositories', (request, response) => {
     likes: 0,
   };
 
-  repositories.push(project);
+  repositories.push(repo);
 
-  return response.json(project);
+  return response.json(repo);
 });
 
 app.put('/repositories/:id', (request, response) => {
-  // TODO
+  const { id } = request.params;
+  const { title, url, techs } = request.body;
+
+  const repoIndex = repositories.findIndex((repo) => repo.id === id);
+
+  if (repoIndex < 0) {
+    return response.status(400).json({ error: 'Repo not found!' });
+  }
+
+  const repo = {
+    title,
+    url,
+    techs,
+  };
+
+  repositories[repoIndex] = repo;
+
+  return response.json(repo);
 });
 
 app.delete('/repositories/:id', (request, response) => {
-  // TODO
+  const { id } = request.params;
+
+  const repoIndex = repositories.findIndex((repo) => repo.id === id);
+
+  if (repoIndex < 0) {
+    return response.status(400).json({ error: 'Repo not found!' });
+  }
+
+  // Using splice method to remove 1 item starting from repoIndex
+  repositories.splice(repoIndex, 1);
+
+  return response.status(204).send();
 });
 
 app.post('/repositories/:id/like', (request, response) => {
-  // TODO
+  const { id } = request.params;
+
+  const repoIndex = repositories.findIndex((repo) => repo.id === id);
+
+  if (repoIndex < 0) {
+    return response.status(400).json({ error: 'Repo not found!' });
+  }
+
+  const repo = repositories[repoIndex];
+
+  // Update likes property from the found repo
+  repo.likes++;
+
+  return response.json(repo);
 });
 
 module.exports = app;
