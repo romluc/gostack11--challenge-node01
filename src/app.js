@@ -1,7 +1,7 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 
-// const { uuid } = require("uuidv4");
+const { uuid, isUuid } = require('uuidv4');
 
 const app = express();
 
@@ -10,23 +10,35 @@ app.use(cors());
 
 const repositories = [];
 
-app.get("/repositories", (request, response) => {
+app.get('/repositories', (request, response) => {
+  return response.json(repositories);
+});
+
+app.post('/repositories', (request, response) => {
+  const { title, url, techs, likes } = request.body;
+
+  const project = {
+    id: uuid(),
+    title,
+    url,
+    techs,
+    likes: 0,
+  };
+
+  repositories.push(project);
+
+  return response.json(project);
+});
+
+app.put('/repositories/:id', (request, response) => {
   // TODO
 });
 
-app.post("/repositories", (request, response) => {
+app.delete('/repositories/:id', (request, response) => {
   // TODO
 });
 
-app.put("/repositories/:id", (request, response) => {
-  // TODO
-});
-
-app.delete("/repositories/:id", (request, response) => {
-  // TODO
-});
-
-app.post("/repositories/:id/like", (request, response) => {
+app.post('/repositories/:id/like', (request, response) => {
   // TODO
 });
 
